@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Taskk.Entities;
 using Taskk.Services;
+using Taskk.Statics;
 
 namespace Taskk.Controllers;
 
+[Authorize(Roles = UserRoles.Admin)]
 public class ProductController : Controller
 {
     private readonly IProductService productService;
@@ -13,6 +16,7 @@ public class ProductController : Controller
         this.productService = productService;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var products = await this.productService.GetAllAsync();
