@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Taskk.Entities.ProductAudit>
+
+@{
+    ViewData["Title"] = "Products History";
+    var id = 0;
+}
+
+@if (!Model.Any())
+{
+    <h3 class="align-middle">No Products History</h3>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <form asp-action="FilterHistory">
+                <div class="form-group">
+                    <label for="StartDate" class="control-label">FromTime</label>
+                    <input type="date" name="StartDate" id="StartDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="EndDate" class="control-label">ToTime</label>
+                    <input type="date" name="EndDate" id="EndDate" class="form-control" />
+                </div>
+
+                <div class="form-group mt-3">
+                    <input type="submit" value="Filter" class="btn btn-outline-success float-right" />
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-8 offset-md-2">
+            <table class="table">
+                <thead>
+                    <tr class="text-center">
+                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                        <th>@Html.DisplayNameFor(model => model.Name)</th>
+                        <th>Product link</th>
+                        <th>UserName</th>
+                        <th>@Html.DisplayNameFor(model => model.ChangedDate)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                @(++id)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td class="align-middle">
+                                @if (item.Product != null)
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.ProductId">@item.Product.Title</a>
+                                }
+                                else
+                                {
+                                    <p>Deleted</p>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.User!.UserName)
+                            </td>
+                            <td class="align-middle">
+                                @item.ChangedDate.ToString("g")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<a class="btn btn-outline-primary align-middle" asp-action="Index"> Back to Products </a>
+

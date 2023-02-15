@@ -5,56 +5,64 @@
     var id = 0;
 }
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-        {
-            <a class="btn btn-outline-primary align-middle" asp-action="Add"><i class="bi bi-plus-circle"></i>Add a product</a>
-        }
-        <table class="table">
-            <thead>
-            <tr class="text-center">
-                <th>@Html.DisplayNameFor(model => model.Id)</th>
-                <th>@Html.DisplayNameFor(model => model.Title)</th>
-                <th>@Html.DisplayNameFor(model => model.Quantity)</th>
-                <th>@Html.DisplayNameFor(model => model.Price)</th>
-                <th>@Html.DisplayNameFor(model => model.TotalPriceWithVat)</th>
-                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                {
-                    <th>Actions</th>
-                }
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model)
+@if (!Model.Any())
+{
+    <h3 class="align-middle"> No Products</h3>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
-                <tr>
-                    <td class="align-middle">
-                        @(++id)
-                    </td>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.Quantity)
-                    </td>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td class="align-middle">
-                        @Html.DisplayFor(modelItem => item.TotalPriceWithVat)
-                    </td>
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                    {
-                        <td class="align-middle">
-                            <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>Edit </a> |
-                            <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i>Details </a> |
-                            <a class="btn btn-danger text-white" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i>Delete </a>
-                        </td>
-                    }
-                </tr>
+                <a class="btn btn-outline-primary align-middle" asp-action="Add"><i class="bi bi-plus-circle"></i>Add a product</a>
+                <a class="btn btn-outline-secondary align-middle" asp-action="Audit"><i class="bi bi-eye-fill"></i>Products History</a>
             }
-            </tbody>
-        </table>
+            <table class="table">
+                <thead>
+                    <tr class="text-center">
+                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                        <th>@Html.DisplayNameFor(model => model.Quantity)</th>
+                        <th>@Html.DisplayNameFor(model => model.Price)</th>
+                        <th>@Html.DisplayNameFor(model => model.TotalPriceWithVat)</th>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <th>Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                @(++id)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.TotalPriceWithVat)
+                            </td>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <td class="align-middle">
+                                    <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>Edit </a> |
+                                    <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i>Details </a> |
+                                    <a class="btn btn-danger text-white" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i>Delete </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+}

@@ -16,35 +16,35 @@ public class ProductService : IProductService
 
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
-        var products = await this.appDbContext.Products.ToListAsync();
+        var products = await appDbContext.Products.ToListAsync();
         
         products.ForEach(product => product.VatCalculating(Vat.Value));
 
         return products;
     }
 
-    public async Task<Product?> GetByIdAsync(int id) => await this.appDbContext.Products.FindAsync(id);
+    public async Task<Product?> GetByIdAsync(int id) => await appDbContext.Products.FindAsync(id);
 
-    public async System.Threading.Tasks.Task AddAsync(Product newProduct)
+    public async Task AddAsync(Product newProduct)
     {
-        await this.appDbContext.Products.AddAsync(newProduct);
-        await this.appDbContext.SaveChangesAsync();
+        await appDbContext.Products.AddAsync(newProduct);
+        await appDbContext.SaveChangesAsync();
     }
 
-    public async System.Threading.Tasks.Task UpdateAsync(int id, Product updateProduct)
+    public async Task UpdateAsync(int id, Product updateProduct)
     {
-        var product = await this.appDbContext.Products.FindAsync(id);
+        var product = await appDbContext.Products.FindAsync(id);
 
         product!.Price = updateProduct.Price;
         product.Quantity = updateProduct.Quantity;
         product.Title = updateProduct.Title;
 
-        await this.appDbContext.SaveChangesAsync();
+        await appDbContext.SaveChangesAsync();
     }
 
-    public async System.Threading.Tasks.Task DeleteAsync(Product deleteProduct)
+    public async Task DeleteAsync(Product deleteProduct)
     {
-        this.appDbContext.Remove(deleteProduct);
-        await this.appDbContext.SaveChangesAsync();
+        appDbContext.Remove(deleteProduct);
+        await appDbContext.SaveChangesAsync();
     }
 }

@@ -20,4 +20,6 @@ public class Product
 
     [Display(Name = "Total Price with VAT")]
     public double TotalPriceWithVat { get; set; }
+
+    public virtual List<ProductAudit>? Audits { get; set; }
 }

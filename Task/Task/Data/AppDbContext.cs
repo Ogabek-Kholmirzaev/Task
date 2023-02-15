@@ -10,6 +10,7 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole, string>
     public AppDbContext(DbContextOptions options) : base(options) { }
 
     public DbSet<Product> Products { get; set; }
+    public DbSet<ProductAudit> ProductAudits { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taskk.Entities;
 using Taskk.Services;
@@ -10,10 +11,12 @@ namespace Taskk.Controllers;
 public class ProductController : Controller
 {
     private readonly IProductService productService;
+    private readonly IProductAuditService productAuditService;
 
-    public ProductController(IProductService productService)
+    public ProductController(IProductService productService, IProductAuditService productAuditService)
     {
         this.productService = productService;
+        this.productAuditService = productAuditService;
     }
 
     [AllowAnonymous]
@@ -36,6 +39,16 @@ public class ProductController : Controller
             return View(newProduct);
 
         await this.productService.AddAsync(newProduct);
+
+        var newProductAudit = new ProductAudit()
+        {
+            ChangedDate = DateTime.Now,
+            Name = "Added New Product",
+            ProductId = newProduct.Id,
+            UserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value
+        };
+
+        await this.productAuditService.AddAsync(newProductAudit);
 
         return RedirectToAction(nameof(Index));
     }
@@ -60,6 +73,28 @@ public class ProductController : Controller
 
         if (product == null)
             return View("NotFound");
+
+        var newProductAuditName = "";
+
+        if (product.Title != updateProduct.Title)
+            newProductAuditName += "Title ";
+        if (product.Quantity != updateProduct.Quantity)
+            newProductAuditName += "Quantity ";
+        if (product.Price != updateProduct.Price)
+            newProductAuditName += "Price ";
+
+        if (newProductAuditName != "")
+        {
+            var newProductAudit = new ProductAudit()
+            {
+                ChangedDate = DateTime.Now,
+                Name = newProductAuditName,
+                ProductId = id,
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value
+            };
+
+            await this.productAuditService.AddAsync(newProductAudit);
+        }
 
         await this.productService.UpdateAsync(id, updateProduct);
 
@@ -94,8 +129,39 @@ public class ProductController : Controller
         if (product == null)
             return View("NotFound");
 
+        var newProductAudit = new ProductAudit()
+        {
+            ChangedDate = DateTime.Now,
+            Name = "Deleted Product",
+            ProductId = id,
+            UserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value
+        };
+
+        await this.productAuditService.AddAsync(newProductAudit);
         await this.productService.DeleteAsync(product);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Audit()
+    {
+        var productAudits = await this.productAuditService.GetAllAsync();
+
+        return View(productAudits);
+    }
+
+    public async Task<IActionResult> FilterHistory()
+    {
+        var filter = new Filter();
+
+        if (DateTime.TryParse(Request.Form["startdate"], out _))
+            filter.StartDate = DateTime.Parse(Request.Form["startdate"]);
+
+        if (DateTime.TryParse(Request.Form["enddate"], out _)) 
+            filter.EndDate = DateTime.Parse(Request.Form["enddate"]);
+
+        var result = await this.productAuditService.FilterAsync(filter);
+
+        return View(result);
     }
 }

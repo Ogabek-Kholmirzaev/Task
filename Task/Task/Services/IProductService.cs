@@ -6,7 +6,7 @@ public interface IProductService
 {
     Task<IEnumerable<Product>> GetAllAsync();
     Task<Product?> GetByIdAsync(int id);
-    System.Threading.Tasks.Task AddAsync(Product newProduct);
-    System.Threading.Tasks.Task UpdateAsync(int id, Product updateProduct);
-    System.Threading.Tasks.Task DeleteAsync(Product deleteProduct);
+    Task AddAsync(Product newProduct);
+    Task UpdateAsync(int id, Product updateProduct);
+    Task DeleteAsync(Product deleteProduct);
 }

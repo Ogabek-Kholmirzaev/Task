@@ -1,5 +1,75 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Taskk.Entities.Product
+
 @{
+    ViewData["Title"] = "Product Details";
+    
+    var id = 0;
 }
+
+<div class="row text">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h1>@Model.Title</h1>
+        </p>
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Quantity" class="control-label"></label>
+                        <input asp-for="Quantity" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" readonly="readonly"/>
+                    </div>
+                </form>
+            </div>
+            
+            @if (Model.Audits == null || Model.Audits.Count == 0)
+            {
+                <h3 class="align-middle">No Product History</h3>
+            }
+            else
+            {
+                <div class="col-md-8 offset-md-2">
+                    <table class="table">
+                        <thead>
+                        <tr class="text-center">
+                            <th>Id</th>
+                            <th>Changes</th>
+                            <th>UserName</th>
+                            <th>Time</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Audits!)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    @(++id)
+                                </td>
+                                <td class="align-middle">
+                                    @item.Name
+                                </td>
+                                <td class="align-middle">
+                                    @item.User!.UserName
+                                </td>
+                                <td class="align-middle">
+                                    @item.ChangedDate.ToString("g")
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            
+            <a class="btn btn-outline-secondary" asp-action="Index">Back to Products</a>
+        </div>
+    </div>
+</div>
+

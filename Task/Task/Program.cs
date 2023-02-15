@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductAuditService, ProductAuditService>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
