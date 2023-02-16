@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Taskk.Entities;
 using Taskk.Services;
 using Taskk.Statics;
@@ -161,7 +162,10 @@ public class ProductController : Controller
             filter.EndDate = DateTime.Parse(Request.Form["enddate"]);
 
         var result = await this.productAuditService.FilterAsync(filter);
+        var resultJson = JsonConvert.SerializeObject(result);
 
-        return View(result);
+        ViewData["JSON"] = resultJson;
+
+        return Ok(resultJson);
     }
 }

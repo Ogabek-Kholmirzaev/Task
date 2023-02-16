@@ -15,10 +15,12 @@ public class RegisterDto
 
     [Display(Name = "Role")]
     [Required]
+    [RegularExpression("Admin|User", ErrorMessage = "Enter Admin or User")]
     public string? Role { get; set; }
 
     [Display(Name = "Email address")]
     [Required]
+    [DataType(DataType.EmailAddress)]
     public string? EmailAddress { get; set; }
 
     [Required]
