@@ -16,6 +16,16 @@ builder.Services.AddControllersWithViews()
         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     });
 
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Formatting = Formatting.Indented;
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    });
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductAuditService, ProductAuditService>();
 
@@ -31,7 +41,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>  
 {
     options.UseLazyLoadingProxies()
-        .UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+        .UseInMemoryDatabase("task-mee");
 });
 
 Vat.Value = int.Parse(builder.Configuration["VAT"]);
@@ -46,6 +56,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -57,5 +70,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
+
+AppDbSeedData.Seed(app);
+AppDbSeedData.SeedUsersAndRolesAsync(app).Wait();
 
 app.Run();

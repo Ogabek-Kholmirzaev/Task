@@ -57,7 +57,7 @@ public class AccountController : Controller
             }
 
             await this.userManager.AddToRoleAsync(newUser, registerDto.Role);
-            await this.signInManager.SignInAsync(newUser, isPersistent: false);
+            await this.signInManager.SignInAsync(newUser, isPersistent: true);
 
             return RedirectToAction("Index", "Product");
         }
@@ -87,7 +87,7 @@ public class AccountController : Controller
 
             if (passwordCheck)
             {
-                var result = await this.signInManager.PasswordSignInAsync(user, loginDto.Password, false, false);
+                var result = await this.signInManager.PasswordSignInAsync(user, loginDto.Password, true, false);
 
                 if (result.Succeeded)
                     return RedirectToAction("Index", "Product");

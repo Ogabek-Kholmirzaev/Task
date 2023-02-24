@@ -8,7 +8,7 @@ using Taskk.Statics;
 
 namespace Taskk.Controllers;
 
-[Authorize(Roles = UserRoles.Admin)]
+[Authorize]
 public class ProductController : Controller
 {
     private readonly IProductService productService;
@@ -20,7 +20,6 @@ public class ProductController : Controller
         this.productAuditService = productAuditService;
     }
 
-    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var products = await this.productService.GetAllAsync();
@@ -28,12 +27,14 @@ public class ProductController : Controller
         return View(products);
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     public IActionResult Add()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> Add(Product newProduct)
     {
         if (!ModelState.IsValid)
@@ -54,6 +55,7 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> Edit(int id)
     {
         var product = await this.productService.GetByIdAsync(id);
@@ -65,6 +67,7 @@ public class ProductController : Controller
     }
 
     [HttpPost, ActionName(nameof(Edit))]
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> EditConfirmed(int id, Product updateProduct)
     {
         if (!ModelState.IsValid)
@@ -102,6 +105,7 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> Details(int id)
     {
         var product = await this.productService.GetByIdAsync(id);
@@ -112,6 +116,7 @@ public class ProductController : Controller
         return View(product);
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> Delete(int id)
     {
         var product = await this.productService.GetByIdAsync(id);
@@ -123,6 +128,7 @@ public class ProductController : Controller
     }
 
     [HttpPost, ActionName(nameof(Delete))]
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var product = await this.productService.GetByIdAsync(id);
@@ -144,6 +150,7 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> Audit()
     {
         var productAudits = await this.productAuditService.GetAllAsync();
@@ -151,6 +158,7 @@ public class ProductController : Controller
         return View(productAudits);
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> FilterHistory()
     {
         var filter = new Filter();

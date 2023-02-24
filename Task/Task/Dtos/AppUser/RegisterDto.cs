@@ -15,7 +15,7 @@ public class RegisterDto
 
     [Display(Name = "Role")]
     [Required]
-    [RegularExpression("Admin|User", ErrorMessage = "Enter Admin or User")]
+    [RegularExpression("admin|user", ErrorMessage = "Enter admin or user")]
     public string? Role { get; set; }
 
     [Display(Name = "Email address")]
